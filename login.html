@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pantry Master — Login</title>
+<style>
+  :root{--green:#2b8a3e;--accent:#3fa14a;--bg:#f7f7f7}
+  body{margin:0;font-family:Inter,Arial,sans-serif;background: linear-gradient(120deg, #f0f1f3 0%, #3a7551 100%);}
+   header{
+    background: linear-gradient(90deg,var(--green),#23462c);
+    color:#fff;
+    padding:16px 6%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .brand{
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:1px;
+  }
+
+  nav{
+    display:flex;
+    gap:40px; /* spacing between menu items */
+  }
+
+  nav a{
+    position:relative;
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    font-size:16px;
+    transition:all .3s ease;
+  }
+
+  /* Hover animations */
+  nav a::after{
+    content:'';
+    position:absolute;
+    bottom:-4px;
+    left:0;
+    width:0%;
+    height:3px;
+    background:#fff;
+    transition:width .3s ease;
+    border-radius:2px;
+  }
+
+  nav a:hover::after{
+    width:100%;
+  }
+
+  nav a:hover{
+    color:#f4f4f4;
+    transform:translateY(-2px);
+  }
+  .box{max-width:420px;margin:40px auto;background:#fff;padding:22px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+  input{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6;margin-top:8px}
+  button{background:var(--accent);color:#fff;padding:10px 12px;border:none;border-radius:8px;margin-top:12px;cursor:pointer}
+  .msg{margin-top:12px;font-weight:700}
+  .spark{display:inline-block;transform:scale(.9);transition:transform .25s}
+  .spark.do{transform:scale(1.08)}
+  
+  /* ... your existing CSS code ... */
+
+  /* ✅ Add this at the bottom of your CSS */
+  @media (max-width: 768px) {
+    nav { 
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .hero {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .hero-right {
+      height: 220px;
+      margin-top: 20px;
+    }
+
+    .features {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    nav {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-left h1 {
+      font-size: 26px;
+    }
+
+    .cta {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+<img src="logo.jpg" alt="Logo" width="60">
+  <div style="font-weight:700">Pantry Master</div>
+  <div>
+    <nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="checkout.html">Checkout</a>
+    <a href="login.html">Login</a>
+    <a href="admin.html">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<div class="box">
+  <h2>Login</h2>
+  <p>Admin:<strong></strong><strong></strong></p>
+  <form id="f">
+    <label>Email</label><input type="email" id="e" required>
+    <label>Password</label><input type="password" id="p" required>
+    <button type="submit">Login</button>
+  </form>
+  <div class="msg" id="msg"></div>
+</div>
+
+<script>
+document.getElementById('f').addEventListener('submit', e=>{
+  e.preventDefault();
+  const email = document.getElementById('e').value.trim();
+  const pass = document.getElementById('p').value.trim();
+  const msg = document.getElementById('msg');
+  if(email==='admin@pantry.com' && pass==='admin123'){
+    // success animation
+    msg.innerHTML = '<span class="spark">✅ Admin login successful</span>';
+    document.querySelector('.spark').classList.add('do');
+    sessionStorage.setItem('isAdmin','1');
+    setTimeout(()=> location.href='admin.html',700);
+  } else {
+    msg.innerText = 'Invalid credentials';
+    msg.style.color='crimson';
+  }
+});
+</script>
+</body>
+</html>

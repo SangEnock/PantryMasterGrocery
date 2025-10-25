@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pantry Master — Products</title>
+<style>
+  :root{--green:#2b8a3e;--accent:#3fa14a;--bg:#f7f7f7}
+  body{margin:0;font-family:Inter,Arial,sans-serif;background: linear-gradient(120deg, #f0f1f3 0%, #3a7551 100%);}
+ header{
+    background: linear-gradient(90deg,var(--green),#23462c);
+    color:#fff;
+    padding:16px 6%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .brand{
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:1px;
+  }
+
+  nav{
+    display:flex;
+    gap:40px; /* spacing between menu items */
+  }
+
+  nav a{
+    position:relative;
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    font-size:16px;
+    transition:all .3s ease;
+  }
+
+  /* Hover animations */
+  nav a::after{
+    content:'';
+    position:absolute;
+    bottom:-4px;
+    left:0;
+    width:0%;
+    height:3px;
+    background:#fff;
+    transition:width .3s ease;
+    border-radius:2px;
+  }
+
+  nav a:hover::after{
+    width:100%;
+  }
+
+  nav a:hover{
+    color:#f4f4f4;
+    transform:translateY(-2px);
+  }
+  nav a{color:#fff;text-decoration:none;margin-left:12px;font-weight:600}
+  .container{padding:26px 6%}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+  .card{background:#fff;border-radius:12px;padding:12px;position:relative;overflow:visible;box-shadow:0 8px 26px rgba(0,0,0,.06);transition:transform .18s}
+  .card:hover{transform:translateY(-6px)}
+  .card img{width:100%;height:150px;object-fit:cover;border-radius:8px}
+  .meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .price{font-weight:800}
+  .add{background:var(--accent);color:#fff;padding:8px 10px;border:none;border-radius:8px;cursor:pointer;display:flex;gap:8px;align-items:center}
+  .cart-pin{position:fixed;right:18px;bottom:18px;background:var(--green);color:#fff;padding:12px 14px;border-radius:999px;box-shadow:0 8px 22px rgba(0,0,0,.18);cursor:pointer;display:flex;align-items:center;gap:8px}
+  .cart-count{background:#ff5a5a;padding:6px 8px;border-radius:50%;font-weight:700}
+  /* fly image */
+  .flying{position:fixed;z-index:9999;pointer-events:none;width:60px;height:60px;border-radius:8px;object-fit:cover;transition:transform .65s cubic-bezier(.2,.9,.3,1),opacity .65s}
+  /* page fade */
+  .page{opacity:0;transform:translateY(8px);transition:all .36s}
+  .page.in{opacity:1;transform:none}
+
+  /* ... your existing CSS code ... */
+
+  /* ✅ Add this at the bottom of your CSS */
+  @media (max-width: 768px) {
+    nav { 
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .hero {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .hero-right {
+      height: 220px;
+      margin-top: 20px;
+    }
+
+    .features {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    nav {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-left h1 {
+      font-size: 26px;
+    }
+
+    .cta {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+   <img src="logo.jpg" alt="Logo" width="60">
+  <div class="brand">Pantry Master</div>
+  <div>
+    <nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="checkout.html">Checkout</a>
+    <a href="login.html">Login</a>
+    <a href="admin.html">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page" id="page">
+  <section class="container">
+    <h2>Our Products</h2>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<div class="cart-pin" id="cartPin">
+  <span id="cartCount" class="cart-count">0</span>
+  <span style="font-weight:700">Cart</span>
+</div>
+
+<script>
+/* --- products initial data (if localStorage empty) --- */
+const sample = [
+  {id:1,name:'Tomatoes (1kg)',price:120,img:"tomatoes.jpg"},
+  {id:2,name:'Milk 500ml',price:70,img:"milk.webp"},
+  {id:3,name:'Bread (loaf)',price:100,img:"breadd.webp"},
+  {id:4,name:'Onions (1kg)',price:90,img:"onion.webp"},
+  {id:5,name:'Kales (1 Bunch)',price:30,img:"kales.jpg"},
+  {id:6,name:'Eggs (6 pcs)',price:180,img:"Brown-eggs.webp"},
+  {id:7,name:'Banana (6 pcs)',price:105,img:"bananas.jpg"},
+  {id:8,name:'Avacado (5kg)',price:350,img:"Avocado.jpg"},
+];
+
+
+(function initProducts(){
+  if(!localStorage.getItem('pantryProducts')){
+    localStorage.setItem('pantryProducts', JSON.stringify(sample));
+  }
+})();
+
+const grid = document.getElementById('grid');
+const cartCount = document.getElementById('cartCount');
+
+function render(){
+  const prods = JSON.parse(localStorage.getItem('pantryProducts')||'[]');
+  grid.innerHTML = '';
+  prods.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.name}" loading="lazy">
+      <h3 style="margin:10px 0 6px">${p.name}</h3>
+      <div class="meta"><div class="price">Ksh ${p.price}</div>
+      <button class="add" data-id="${p.id}">Add to cart</button></div>
+    `;
+    grid.appendChild(card);
+  });
+  updateCount();
+}
+render();
+
+/* --- fly-to-cart animation --- */
+document.addEventListener('click', e=>{
+  const bt = e.target.closest('.add');
+  if(!bt) return;
+  const id = +bt.dataset.id;
+  const imgEl = bt.closest('.card').querySelector('img');
+  const imgRect = imgEl.getBoundingClientRect();
+  const cartRect = document.getElementById('cartPin').getBoundingClientRect();
+
+  // create clone
+  const fly = imgEl.cloneNode(true);
+  fly.className = 'flying';
+  document.body.appendChild(fly);
+  fly.style.left = imgRect.left + 'px';
+  fly.style.top = imgRect.top + 'px';
+  fly.style.width = imgRect.width + 'px';
+  fly.style.height = imgRect.height + 'px';
+  fly.style.opacity = '1';
+
+  // force reflow to allow transition
+  fly.getBoundingClientRect();
+
+  // target translate
+  const dx = cartRect.left + (cartRect.width/2) - (imgRect.left + imgRect.width/2);
+  const dy = cartRect.top + (cartRect.height/2) - (imgRect.top + imgRect.height/2);
+  fly.style.transform = `translate(${dx}px, ${dy}px) scale(.18) rotate(20deg)`;
+  fly.style.opacity = '0.9';
+
+  // add item to localStorage cart
+  addToCartLocal(id);
+
+  setTimeout(()=> {
+    fly.style.opacity='0';
+    setTimeout(()=> fly.remove(), 700);
+  }, 650);
+});
+
+/* --- cart storage functions --- */
+function addToCartLocal(id){
+  const prods = JSON.parse(localStorage.getItem('pantryProducts')||'[]');
+  const item = prods.find(p=>p.id===id);
+  if(!item) return;
+  const cart = JSON.parse(localStorage.getItem('pantryCart')||'[]');
+  const found = cart.find(c=>c.id===id);
+  if(found) found.qty += 1;
+  else cart.push({id:item.id,name:item.name,price:item.price, img:item.img, qty:1});
+  localStorage.setItem('pantryCart', JSON.stringify(cart));
+  updateCount();
+}
+
+function updateCount(){
+  const cart = JSON.parse(localStorage.getItem('pantryCart')||'[]');
+  const total = cart.reduce((s,i)=>s+i.qty,0);
+  cartCount.innerText = total;
+}
+
+/* page animation in */
+window.addEventListener('DOMContentLoaded', ()=> setTimeout(()=> document.getElementById('page').classList.add('in'), 60));
+</script>
+</body>
+</html>

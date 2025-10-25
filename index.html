@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pantry Master — Home</title>
+<style>
+  :root{
+    --green:#2b8a3e;
+    --accent:#3fa14a;
+    --bg:#f7f7f7;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  body{
+    font-family: 'Poppins', Arial, sans-serif;
+    background: linear-gradient(120deg, #f0f1f3 0%, #3a7551 100%);;
+    color:#111;
+    overflow-x:hidden;
+  }
+
+  /* Header + Navigation */
+  header{
+    background: linear-gradient(90deg,var(--green),#23462c);
+    color:#fff;
+    padding:16px 6%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .brand{
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:1px;
+  }
+
+  nav{
+    display:flex;
+    gap:40px; /* spacing between menu items */
+  }
+
+  nav a{
+    position:relative;
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    font-size:16px;
+    transition:all .3s ease;
+  }
+
+  /* Hover animations */
+  nav a::after{
+    content:'';
+    position:absolute;
+    bottom:-4px;
+    left:0;
+    width:0%;
+    height:3px;
+    background:#fff;
+    transition:width .3s ease;
+    border-radius:2px;
+  }
+
+  nav a:hover::after{
+    width:100%;
+  }
+
+  nav a:hover{
+    color:#f4f4f4;
+    transform:translateY(-2px);
+  }
+
+  /* Hero section */
+  .hero{
+    display:grid;
+    grid-template-columns:1fr 420px;
+    gap:30px;
+    padding:60px 6%;
+    align-items:center;
+  }
+
+  .hero-left h1{
+    font-size:40px;
+    margin-bottom:14px;
+    color:#222;
+    animation:fadeInUp 1s ease forwards;
+  }
+
+  .hero-left p{
+    font-size:17px;
+    color:#444;
+    line-height:1.6;
+    margin-bottom:20px;
+    animation:fadeInUp 1.2s ease forwards;
+  }
+
+  .cta{
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    padding:12px 22px;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:transform .2s, box-shadow .3s;
+  }
+
+  .cta:hover{
+    transform:scale(1.05);
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .hero-right{
+    position:relative;
+    height:320px;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    animation:fadeInRight 1.5s ease forwards;
+  }
+
+  .hero-right img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform:scale(1.05);
+    transition:transform 8s ease-in-out;
+  }
+
+  .hero-right img.animate{
+    transform:scale(1);
+  }
+
+  /* Features section */
+  .features{
+    display:flex;
+    gap:24px;
+    padding:30px 6%;
+    flex-wrap:wrap;
+  }
+
+  .card{
+    background:#fff;
+    padding:18px;
+    border-radius:12px;
+    flex:1 1 240px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    text-align:center;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+
+  .card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 10px 28px rgba(0,0,0,0.12);
+  }
+
+  footer{
+    background:var(--green);
+    color:#fff;
+    text-align:center;
+    padding:14px;
+    margin-top:40px;
+    font-size:14px;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp{
+    0%{opacity:0;transform:translateY(20px);}
+    100%{opacity:1;transform:translateY(0);}
+  }
+
+  @keyframes fadeInRight{
+    0%{opacity:0;transform:translateX(40px);}
+    100%{opacity:1;transform:translateX(0);}
+  }
+
+  .page-fade{opacity:0;transform:translateY(10px);transition:all .45s ease;}
+  .page-fade.in{opacity:1;transform:none;}
+  /* ... your existing CSS code ... */
+
+  /* ✅ Add this at the bottom of your CSS */
+  @media (max-width: 768px) {
+    nav { 
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .hero {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .hero-right {
+      height: 220px;
+      margin-top: 20px;
+    }
+
+    .features {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    nav {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-left h1 {
+      font-size: 26px;
+    }
+
+    .cta {
+      width: 100%;
+    }
+  }
+
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.jpg" alt="Logo" width="60">
+  <div class="brand">Pantry Master</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="checkout.html">Checkout</a>
+    <a href="login.html">Login</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+</header>
+
+<main class="page-fade" id="page">
+  <section class="hero">
+    <div class="hero-left">
+      <h1>Fresh Groceries. Fast Delivery.</h1>
+      <p>Shop the freshest produce, dairy, and pantry essentials — delivered to your doorstep across Nairobi the same day.</p>
+      <button class="cta" id="shopBtn">Shop Now</button>
+    </div>
+    <div class="hero-right">
+      <img id="heroImg" class="animate" src="groceries.jpg" alt="Fresh groceries">
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="card">
+      <h3>🚚 Same-day Delivery</h3>
+      <p>Order before 4 PM for same-day delivery within Nairobi.</p>
+    </div>
+    <div class="card">
+      <h3>🥬 Freshness Guaranteed</h3>
+      <p>All our produce is hand-picked and delivered with care.</p>
+    </div>
+    <div class="card">
+      <h3>💳 Secure Payments</h3>
+      <p>Pay safely via M-Pesa, card, or mobile wallets.</p>
+    </div>
+  </section>
+</main>
+
+<footer>&copy; 2025 Pantry Master | Nairobi, Kenya</footer>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('page').classList.add('in');
+  const hero = document.getElementById('heroImg');
+  setInterval(() => hero.classList.toggle('animate'), 6000);
+});
+
+document.getElementById('shopBtn').addEventListener('click', () => {
+  document.getElementById('page').classList.remove('in');
+  setTimeout(() => location.href = 'products.html', 400);
+});
+</script>
+</body>
+</html>

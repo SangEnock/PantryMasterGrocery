@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Pantry Master — Cart</title>
+<style>
+    header{
+    background: linear-gradient(90deg,var(--green),#1f7a35);
+    color:#fff;
+    padding:16px 6%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .brand{
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:1px;
+  }
+
+  nav{
+    display:flex;
+    gap:40px; /* spacing between menu items */
+  }
+
+  nav a{
+    position:relative;
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    font-size:16px;
+    transition:all .3s ease;
+  }
+
+  /* Hover animations */
+  nav a::after{
+    content:'';
+    position:absolute;
+    bottom:-4px;
+    left:0;
+    width:0%;
+    height:3px;
+    background:#fff;
+    transition:width .3s ease;
+    border-radius:2px;
+  }
+
+  nav a:hover::after{
+    width:100%;
+  }
+
+  nav a:hover{
+    color:#f4f4f4;
+    transform:translateY(-2px);
+  }
+  :root{--green:#2b8a3e;--accent:#3fa14a;--bg:#f7f7f7}
+  body{margin:0;font-family:Inter,Arial,sans-serif;background: linear-gradient(120deg, #f0f1f3 0%, #3a7551 100%)}
+  header{background: linear-gradient(90deg,var(--green),#23462c);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+  nav a{color:#ffffff;text-decoration:none;margin-left:12px;font-weight:600}
+  .wrap{padding:28px 6%}
+  .list{background:#679d85;border-radius:12px;padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+  .row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #eee}
+  .row img{width:84px;height:64px;object-fit:cover;border-radius:8px}
+  .qty{display:flex;gap:6px;align-items:center}
+  .btn{background:var(--accent);color:#fff;padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
+  .remove{background:#ff5a5a;padding:8px 10px;border:none;color:#fff;border-radius:8px;cursor:pointer}
+  .summary{margin-top:16px;text-align:right}
+  .pulse{animation:pulse .45s ease}
+  @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+  /* ... your existing CSS code ... */
+
+  /* ✅ Add this at the bottom of your CSS */
+  @media (max-width: 768px) {
+    nav { 
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .hero {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .hero-right {
+      height: 220px;
+      margin-top: 20px;
+    }
+
+    .features {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    nav {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-left h1 {
+      font-size: 26px;
+    }
+
+    .cta {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.jpg" alt="Logo" width="60">
+  <div style="font-weight:700">Pantry Master</div>
+  <div>
+    <nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="checkout.html">Checkout</a>
+    <a href="login.html">Login</a>
+    <a href="admin.html">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h2>Your Cart</h2>
+  <div class="list" id="listArea">Loading...</div>
+  <div style="margin-top:18px;text-align:right">
+    <button class="btn" id="toCheckout">Proceed to Checkout</button>
+  </div>
+</main>
+
+<script>
+function renderCart(){
+  const list = document.getElementById('listArea');
+  const cart = JSON.parse(localStorage.getItem('pantryCart')||'[]');
+  if(cart.length===0){ list.innerHTML = '<p>Your cart is empty. <a href="products.html">Shop now</a></p>'; return; }
+  list.innerHTML = '';
+  cart.forEach((c, idx)=>{
+    const row = document.createElement('div');
+    row.className='row';
+    row.innerHTML = `
+      <img src="${c.img}" alt="${c.name}">
+      <div style="flex:1">
+        <div style="font-weight:700">${c.name}</div>
+        <div style="color:#666;margin-top:6px">Ksh ${c.price} each</div>
+      </div>
+      <div class="qty">
+        <button onclick="changeQty(${idx}, -1)" class="remove">-</button>
+        <div id="q${idx}" style="min-width:24px;text-align:center">${c.qty}</div>
+        <button onclick="changeQty(${idx}, 1)" class="btn">+</button>
+      </div>
+      <div style="width:120px;text-align:right">Ksh <span id="sub${idx}">${c.price * c.qty}</span></div>
+      <div style="width:80px;text-align:right"><button class="remove" onclick="removeItem(${idx})">Remove</button></div>
+    `;
+    list.appendChild(row);
+  });
+  const total = cart.reduce((s,i)=>s + i.price * i.qty,0);
+  const summ = document.createElement('div');
+  summ.className='summary';
+  summ.innerHTML = `<h3>Total: Ksh ${total}</h3>`;
+  list.appendChild(summ);
+}
+
+function changeQty(i, delta){
+  const cart = JSON.parse(localStorage.getItem('pantryCart')||'[]');
+  if(!cart[i]) return;
+  cart[i].qty = Math.max(1, cart[i].qty + delta);
+  localStorage.setItem('pantryCart', JSON.stringify(cart));
+  // visual flash
+  const el = document.getElementById('q'+i);
+  el.classList.add('pulse');
+  setTimeout(()=> el.classList.remove('pulse'), 380);
+  renderCart();
+  updateCartIcon();
+}
+
+function removeItem(i){
+  const cart = JSON.parse(localStorage.getItem('pantryCart')||'[]');
+  cart.splice(i,1);
+  localStorage.setItem('pantryCart', JSON.stringify(cart));
+  renderCart();
+  updateCartIcon();
+}
+
+function updateCartIcon(){
+  // update small cart counters in other pages
+  // store a timestamp to notify
+  localStorage.setItem('pantryCartUpdatedAt', Date.now());
+}
+
+document.getElementById('toCheckout').addEventListener('click', ()=> location.href='checkout.html');
+
+window.addEventListener('storage', (e)=> {
+  if(e.key === 'pantryCart' || e.key === 'pantryCartUpdatedAt') renderCart();
+});
+
+renderCart();
+</script>
+</body>
+</html>
