@@ -162,6 +162,12 @@ const sample = [
 ];
 
 
+(function initProducts(){
+  if(!localStorage.getItem('pantryProducts')){
+    localStorage.setItem('pantryProducts', JSON.stringify(sample));
+  }
+})();
+
 const grid = document.getElementById('grid');
 const cartCount = document.getElementById('cartCount');
 
