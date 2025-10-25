@@ -67,15 +67,12 @@
   .add{background:var(--accent);color:#fff;padding:8px 10px;border:none;border-radius:8px;cursor:pointer;display:flex;gap:8px;align-items:center}
   .cart-pin{position:fixed;right:18px;bottom:18px;background:var(--green);color:#fff;padding:12px 14px;border-radius:999px;box-shadow:0 8px 22px rgba(0,0,0,.18);cursor:pointer;display:flex;align-items:center;gap:8px}
   .cart-count{background:#ff5a5a;padding:6px 8px;border-radius:50%;font-weight:700}
-  /* fly image */
+  
   .flying{position:fixed;z-index:9999;pointer-events:none;width:60px;height:60px;border-radius:8px;object-fit:cover;transition:transform .65s cubic-bezier(.2,.9,.3,1),opacity .65s}
-  /* page fade */
+
   .page{opacity:0;transform:translateY(8px);transition:all .36s}
   .page.in{opacity:1;transform:none}
 
-  /* ... your existing CSS code ... */
-
-  /* ✅ Add this at the bottom of your CSS */
   @media (max-width: 768px) {
     nav { 
       flex-wrap: wrap;
@@ -160,16 +157,10 @@ const sample = [
   {id:4,name:'Onions (1kg)',price:90,img:"onion.webp"},
   {id:5,name:'Kales (1 Bunch)',price:30,img:"kales.jpg"},
   {id:6,name:'Eggs (6 pcs)',price:180,img:"eggs1.jpg"},
-  {id:7,name:'Banana (6 pcs)',price:105,img:"banna1.jpg"},
-  {id:8,name:'Avacado (5kg)',price:350,img:"Avocado.jpg"},
+  {id:7,name:'Banana (6 pcs)',price:105,img:"banana.jpg"},
+  {id:8,name:'Avocado (5kg)',price:350,img:"avocado.jpg"},
 ];
 
-
-(function initProducts(){
-  if(!localStorage.getItem('pantryProducts')){
-    localStorage.setItem('pantryProducts', JSON.stringify(sample));
-  }
-})();
 
 const grid = document.getElementById('grid');
 const cartCount = document.getElementById('cartCount');
